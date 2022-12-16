@@ -1,0 +1,9 @@
+*.nes
+*.txt
+*.o
+*.chr
+*.nam
+*.pct
+*.pal
+*.lnk
+*.sublime-*

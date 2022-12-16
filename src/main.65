@@ -1,0 +1,59 @@
+.include "nes2header.inc"
+.include "nes.inc"
+; define the header
+nes2mapper 0 ; NROM
+nes2prg 16384 ; 16K PRG
+nes2chr 8192 ; 8K CHR
+nes2mirror 'H' ; vertical mirroring
+nes2tv 'N' ; NTSC only
+nes2end
+
+.segment "ZEROPAGE"
+zNMI: .res 1 ; set by NMI
+zColor: .res 1
+
+.segment "VECTORS"
+; define the interrpt/reset vectors
+.word NMI ; NMI vector
+.word Start ; reset vector
+.word IRQ ; IRQ vector
+
+.segment "CODE"
+; execution starts here
+Start:
+	; enable NMIs and +32
+	lda #CTRLF_NMI | CTRLF_INC32
+	sta PPUCTRL
+	; enable Fblank
+	lda #$00
+	sta PPUMASK
+Spin: ; spin till nmi flag set
+	lda zNMI ; not init but thats fine
+	beq Spin
+	lda #$00
+	sta zNMI
+Color: ; do funny math on palette
+	lda PPUSTATUS ; reset latch
+	lda #$3f ; MSB of palette addr
+	sta PPUADDR
+	lda #$00 ; LSB of palette addr
+	sta PPUADDR
+	lda zColor
+	sta PPUDATA ; load color
+	inc zColor
+	; done
+	jmp Spin
+	
+.segment "CODE"
+; interrupt
+IRQ:
+	rti
+
+.segment "CODE"
+; non-maskable interrupt
+NMI:
+	pha
+	lda PPUSTATUS
+	inc zNMI ; just inc the counter
+	pla
+	rti
