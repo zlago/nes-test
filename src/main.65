@@ -1,10 +1,11 @@
-.include "nes2header.inc"
-.include "nes.inc"
+.include "nes.inc" ; hardware definitions
+.include "main.inc" ; import used labels
+.include "nes2header.inc" ; header definition macros
 ; define the header
 nes2mapper 0 ; NROM
 nes2prg 16384 ; 16K PRG
 nes2chr 8192 ; 8K CHR
-nes2mirror 'H' ; vertical mirroring
+nes2mirror 'H' ; horizontal mirroring
 nes2tv 'N' ; NTSC only
 nes2end
 
@@ -24,23 +25,43 @@ Start:
 	; enable NMIs and +32
 	lda #CTRLF_NMI | CTRLF_INC32
 	sta PPUCTRL
-	; enable Fblank
-	lda #$00
+	; blank and tint to make it a bit easier on the eyes
+	lda #MASKF_R | MASKF_G | MASKF_B
 	sta PPUMASK
+	; init zColor and zNMI
+	lda #$21-1
+	sta zColor
+	lda #00
+	sta zNMI
 Spin: ; spin till nmi flag set
-	lda zNMI ; not init but thats fine
-	beq Spin
+	ldx #6 ; extra delay
+@Loop:
+	lda zNMI
+	beq @Loop
 	lda #$00
 	sta zNMI
+	dex ; delay writes so its easier on the eyes
+	bne @Loop
 Color: ; do funny math on palette
+	; read buttons
+	jsr Pads
+	; read, idk
+	lda zPad1
+	; select address
 	lda PPUSTATUS ; reset latch
 	lda #$3f ; MSB of palette addr
 	sta PPUADDR
 	lda #$00 ; LSB of palette addr
 	sta PPUADDR
+	; prep data
+	inc zColor
 	lda zColor
 	sta PPUDATA ; load color
-	inc zColor
+	; loop palette cycle if needed
+	cmp #$2d-1
+	bcc Spin
+	lda #$21-1
+	sta zColor
 	; done
 	jmp Spin
 	
@@ -57,3 +78,6 @@ NMI:
 	inc zNMI ; just inc the counter
 	pla
 	rti
+
+.segment "CHR"
+.incbin "res/fuckdisshit.chr" ; literally required
