@@ -35,10 +35,10 @@ Start:
 	sta zNMI
 Spin: ; spin till nmi flag set
 	ldx #6 ; extra delay
-@Loop:
-	lda zNMI
+@Loop: ; the actual waitloop
+	lda zNMI ; poll nmi flag
 	beq @Loop
-	lda #$00
+	lda #$00 ; reset nmi flag
 	sta zNMI
 	dex ; delay writes so its easier on the eyes
 	bne @Loop
@@ -74,8 +74,8 @@ IRQ:
 ; non-maskable interrupt
 NMI:
 	pha
-	lda PPUSTATUS
-	inc zNMI ; just inc the counter
+	lda PPUSTATUS ; reset vblank flag
+	inc zNMI ; increment nmi flag
 	pla
 	rti
 
