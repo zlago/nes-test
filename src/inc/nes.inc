@@ -4,6 +4,12 @@
 ; - etc etc
 ; - 
 
+; = misc CPU stuff =
+
+; bit test flag positions, for ASSERTs i guess
+BIT_N = %10000000
+BIT_V = %01000000
+
 ; = PPU registers =
 
 ; various PPU control bits
@@ -45,7 +51,17 @@ STATUSF_VBLANK   = %10000000 ; VBlank occured
 ; object attribute memory regs
 OAMADDR = $2003
 OAMDATA = $2004
-; Y, tile, attr, X
+	; OAM bytes
+	OAM_Y    = 0 ; Y position + 1
+	OAM_TILE = 1 ; sprite tile, in 8x16 bit 0 selects the pattern table
+	OAM_ATTR = 2 ; sprite attributes
+		; OAM attributes
+		OAM_ATTR_PAL      = %00000011 ; SPR palette mask
+		OAM_ATTR_PRIORITY = %00100000 ; SPR priority, 1 is behind BG
+		OAM_ATTR_FLIP_X   = %01000000 ; SPR horizontal flip
+		OAM_ATTR_FLIP_Y   = %10000000 ; SPR vertical flip
+	OAM_X    = 3 ; X position
+	OAM_SIZE = 4 ; this name could change at any time
 
 ; scroll reg
 PPUSCROLL = $2005
@@ -53,13 +69,24 @@ PPUSCROLL = $2005
 ; VRAM access regs
 PPUADDR = $2006
 PPUDATA = $2007
-PPU_TABLE0     = $0000 ; character table 0
-PPU_TABLE1     = $1000 ; character table 1
-PPU_NAMETABLE0 = $2000 ; nametable 0
-PPU_NAMETABLE1 = $2400 ; nametable 1
-PPU_NAMETABLE2 = $2800 ; nametable 2
-PPU_NAMETABLE3 = $2c00 ; nametable 3
-PPU_PAL        = $3f00 ; palette RAM
+	; PPU memory map
+	PPU_TABLE0     = $0000 ; character/pattern table 0
+	PPU_TABLE1     = $1000 ; character/pattern table 1
+	PPU_NAMETABLE0 = $2000 ; nametable 0
+	PPU_NAMETABLE1 = $2400 ; nametable 1
+	PPU_NAMETABLE2 = $2800 ; nametable 2
+	PPU_NAMETABLE3 = $2c00 ; nametable 3
+	PPU_PAL        = $3f00 ; palette RAM
+		PPU_PAL_BG  = $3f00 ; BG palettes, 3f00 is the universal bg color
+			PPU_PAL_BG_0 = $3f00 ; BG palette 0
+			PPU_PAL_BG_1 = $3f04 ; BG palette 1
+			PPU_PAL_BG_2 = $3f08 ; BG palette 2
+			PPU_PAL_BG_3 = $3f0c ; BG palette 3
+		PPU_PAL_SPR = $3f10 ; SPR palettes
+			PPU_PAL_SPR_0 = $3f10 ; SPR palette 0
+			PPU_PAL_SPR_1 = $3f14 ; SPR palette 1
+			PPU_PAL_SPR_2 = $3f18 ; SPR palette 2
+			PPU_PAL_SPR_3 = $3f1c ; SPR palette 3
 
 ; = APU registers =
 
