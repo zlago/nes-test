@@ -7,5 +7,6 @@
 *.pct
 *.pal
 *.lnk
+*.nss
 *.sublime-*
 concept/
