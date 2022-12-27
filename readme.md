@@ -11,6 +11,9 @@ uhh [ca65 and ld65](https://github.com/cc65/cc65), everything else should be in 
 i stole the [nrom cfg](https://github.com/pinobatch/nrom-template/blob/master/nrom128.cfg)
 from [Pino](https://github.com/pinobatch),
 
+used [nes2header.inc](https://www.nesdev.org/wiki/NES_2.0_header_for_ca65),
+also from [Pino](https://github.com/pinobatch)
+
 used [FrankenGraphics](https://twitter.com/FrankenGraphics)'s
 [NEXXT](https://frankengraphics.itch.io/nexxt) for graphics,
 
