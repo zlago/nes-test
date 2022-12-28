@@ -3,32 +3,31 @@
 .include "nes.inc"
 
 .segment "ZEROPAGE"
-.exportzp zPad1, zPad2
+.exportzp zPads, zPad1, zPad2, zPad3, zPad4
+zPads: ; for zp,x addressing
 zPad1: .res 1 ; controller 1
 zPad2: .res 1 ; controller 2
 zPad3: .res 1 ; controller 3
 zPad4: .res 1 ; controller 4
 
 .segment "CODE"
-
-
-Pads: ; read joypads i guess
-.export Pads
+PollPads: ; read joypads i guess
+.export PollPads
 ; based on NESdev polling example code
 ; which uses the pad state as a shift register
-; instead of counting bits
+	; first prepare for polling
 	lda #01
 	sta JOY1 ; strobe pads
 	sta zPad4 ; see comment on bcc
 	lsr ; A = 0
 	sta JOY1 ; unstrobe
-@Loop:
+@Loop: ; actual polling happens here
 	; poll JOY1
 	lda JOY1 ; shift in a bit
-	lsr a ; D0 -> Cy
-	rol zPad1 ; Cy <- bit7..bit0 <- Carry
-	lsr a ; D1 -> Cy
-	rol zPad3 ; Cy <- bit7..bit0 <- Cy
+	lsr a     ;        D0 -> Cy
+	rol zPad1 ; bit7..bit0 <- Cy
+	lsr a     ;        D1 -> Cy
+	rol zPad3 ; bit7..bit0 <- Cy
 	; repeat for JOY2
 	lda JOY2
 	lsr a
@@ -39,4 +38,5 @@ Pads: ; read joypads i guess
 	; shifted into carry, it means were
 	; done polling
 	bcc @Loop
-	rts ; done!
+	; done!
+	rts

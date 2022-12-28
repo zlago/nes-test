@@ -1,3 +1,8 @@
+; - le main file -
+; if something doesnt deserve
+; its own file i throw it here
+; sometimes i forget to do that though
+
 .include "nes.inc" ; hardware definitions
 .include "main.inc" ; import used labels
 .include "nes2header.inc" ; header definition macros
@@ -44,7 +49,7 @@ Spin: ; spin till nmi flag set
 	bne @Loop
 Color: ; do funny math on palette
 	; read buttons
-	jsr Pads
+	jsr PollPads
 	; read, idk
 	lda zPad1
 	; select address

@@ -1,2 +1,2 @@
-.import Pads
-.importzp zPad1, zPad2
+.import PollPads
+.importzp zPads, zPad1, zPad2, zPad3, zPad4
