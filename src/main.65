@@ -3,9 +3,9 @@
 ; its own file i throw it here
 ; sometimes i forget to do that though
 
-.include "nes.inc" ; hardware definitions
-.include "main.inc" ; import used labels
-.include "nes2header.inc" ; header definition macros
+.include "nes.i" ; hardware definitions
+.include "nes2header.i" ; header definition macros
+.include "main.imp" ; import used labels
 ; define the header
 nes2mapper 0 ; NROM
 nes2prg 16384 ; 16K PRG

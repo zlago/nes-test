@@ -1,6 +1,6 @@
 ; read joypads when called or something
 
-.include "nes.inc"
+.include "nes.i"
 
 .segment "ZEROPAGE"
 .exportzp zPads, zPad1, zPad2, zPad3, zPad4
