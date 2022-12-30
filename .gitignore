@@ -2,13 +2,9 @@
 *.dbg
 *.txt
 *.o
-*.chr
-*.nam
-*.pct
-*.pal
 *.lnk
 *.nss
 *.sublime-*
 concept/
-res/
+/res/
 # couldnt figure out how to convert pngs so im editing the raw chr with NEXXT instead

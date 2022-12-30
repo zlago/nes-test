@@ -85,4 +85,4 @@ NMI:
 	rti
 
 .segment "CHR"
-.incbin "res/fuckdisshit.chr" ; literally required
+.incbin "res/patterns.chr" ; CHR ROM
