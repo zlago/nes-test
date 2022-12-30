@@ -10,6 +10,29 @@
 BIT_N = %10000000
 BIT_V = %01000000
 
+; vectors
+VECTOR_NMI   = $fffa
+VECTOR_RESET = $fffc
+VECTOR_IRQ   = $fffe
+VECTOR_BRK   = $fffe
+
+; flags in P
+FLAGF_C = %00000001
+FLAGF_Z = %00000010
+FLAGF_I = %00000100
+FLAGF_D = %00001000
+FLAGF_B = %00010000
+FLAGF_V = %01000000
+FLAGF_N = %10000000
+FLAGF_CARRY    = %00000001
+FLAGF_ZERO     = %00000010
+FLAGF_IRQ      = %00000100
+FLAGF_INTERRUPT= %00000100
+FLAGF_DECIMAL  = %00001000
+FLAGF_BREAK    = %00010000
+FLAGF_OVERFLOW = %01000000
+FLAGF_NEGATIVE = %10000000
+
 ; = PPU registers =
 
 ; various PPU control bits
@@ -125,6 +148,11 @@ CHNF_NOISE     =    %01000 ; noise    enable
 CHNF_DMC       =    %10000 ; dmc     restart
 CHNF_FRAME_IRQ = %01000000 ; frame counter irq
 CHNF_DMC_IRQ   = %10000000 ; dmc irq
+
+; APU frame counter
+APU_FRAME = $4017 ; i have no idea what the hell a frame counter even is
+FRAMEF_IRQ  = %01000000 ; suspends IRQs, you can rename it to FRAMEF_IRQ_SUS if you think thats a clearer name :3
+FRAMEF_MODE = %10000000 ; id keep this clear
 
 ; = DMA register =
 OAM_DMA = $4014
