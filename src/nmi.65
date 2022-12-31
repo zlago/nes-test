@@ -1,0 +1,27 @@
+.include "nes.i" ; hardware definitions
+
+.segment "ZEROPAGE"
+zNMI: .res 1 ; incremented each frame
+.exportzp zNMI
+
+.segment "CODE"
+; non-maskable interrupt
+NMI:
+.export NMI
+	; save registers
+		pha ; push a
+		txa
+		pha ; push x
+		tya
+		pha ; push y
+	; run NMI stuff
+		bit PPUSTATUS ; reset vblank flag
+		inc zNMI ; increment nmi flag
+	; restore registers
+		pla ; pull y
+		tay
+		pla ; pull x
+		tax
+		pla ; pull a
+	; done, return
+	rti

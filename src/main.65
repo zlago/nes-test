@@ -15,7 +15,6 @@ nes2tv 'N' ; NTSC only
 nes2end
 
 .segment "ZEROPAGE"
-zNMI: .res 1 ; set by NMI
 zColor: .res 1
 
 .segment "VECTORS"
@@ -64,20 +63,6 @@ Color: ; do funny math on palette
 	sta zColor
 	; done
 	jmp Spin
-	
-.segment "CODE"
-; interrupt
-IRQ:
-	rti
-
-.segment "CODE"
-; non-maskable interrupt
-NMI:
-	pha
-	lda PPUSTATUS ; reset vblank flag
-	inc zNMI ; increment nmi flag
-	pla
-	rti
 
 .segment "CHR"
 .incbin "res/patterns.chr" ; CHR ROM

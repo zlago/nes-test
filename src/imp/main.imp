@@ -1,2 +1,3 @@
-.import PollPads, Reset
+.import PollPads, Reset, IRQ, NMI
+.importzp zNMI
 .importzp zPads, zPad1, zPad2, zPad3, zPad4
