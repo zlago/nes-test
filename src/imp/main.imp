@@ -1,2 +1,2 @@
-.import PollPads
+.import PollPads, Reset
 .importzp zPads, zPad1, zPad2, zPad3, zPad4

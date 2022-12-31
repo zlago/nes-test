@@ -21,18 +21,13 @@ zColor: .res 1
 .segment "VECTORS"
 ; define the interrpt/reset vectors
 .word NMI ; NMI vector
-.word Start ; reset vector
+.word Reset ; reset vector
 .word IRQ ; IRQ vector
 
 .segment "CODE"
 ; execution starts here
 Start:
-	; enable NMIs and +32
-	lda #CTRLF_NMI | CTRLF_INC32
-	sta PPUCTRL
-	; blank and tint to make it a bit easier on the eyes
-	lda #MASKF_R | MASKF_G | MASKF_B
-	sta PPUMASK
+.export Start
 	; init zColor and zNMI
 	lda #$21-1
 	sta zColor
@@ -54,9 +49,9 @@ Color: ; do funny math on palette
 	lda zPad1
 	; select address
 	lda PPUSTATUS ; reset latch
-	lda #$3f ; MSB of palette addr
+	lda #.hibyte(PPU_PAL)
 	sta PPUADDR
-	lda #$00 ; LSB of palette addr
+	lda #.lobyte(PPU_PAL)
 	sta PPUADDR
 	; prep data
 	inc zColor

@@ -1,0 +1,72 @@
+.include "nes.i" ; hardware definitions
+.include "reset.imp" ; import used labels
+
+.segment "CODE"
+; system reset
+Reset:
+.export Reset
+; since this could be potentially
+; JMP (VECTOR_RESET)'d, we must init *everything*
+; also we must wait out two frames
+	sei ; disable interrupts
+	cld ; make sure no famicl65O2ne suffers
+	bit PPUSTATUS ; clear VBlank flag
+	; disable things
+	ldx #FRAMEF_IRQ
+	stx APU_FRAME ; SUSpend frame counter IRQ ඞ
+	ldx #$ff
+	txs ; nuke stack pointer (s = $1ff)
+	inx ; now x = $00
+	stx PPUCTRL ; disable NMIs
+	stx PPUMASK ; disable rendering
+	stx DMC_FREQ ; disable DMC IRQ
+@Wait1: ; wait out one frame
+	bit PPUSTATUS
+	bpl @Wait1
+		.assert BIT_N = STATUSF_VBLANK, error
+	; clear/init memory
+	txa ; now a = $00
+@ClearMem: ; zero-init all memory
+	sta $00,x
+	sta $100,x
+	sta $200,x
+	sta $300,x
+	sta $400,x
+	sta $500,x
+	sta $600,x
+	sta $700,x
+	inx
+	bne @ClearMem
+	; now init whatever needs to be non-zero
+@Wait2: ; wait out another frame
+	bit PPUSTATUS
+	bpl @Wait2
+		.assert BIT_N = STATUSF_VBLANK, error
+	; we can now access the PPU!
+	; init regs, x should still be 0
+		stx PPUMASK ; enable blanking
+		stx PPUCTRL ; enable +1 PPUADDR increment
+	; clear the nametables
+		; select address
+		lda PPUSTATUS ; reset latch
+		lda #.hibyte(PPU_NAME)
+		sta PPUADDR
+		lda #.lobyte(PPU_NAME)
+		sta PPUADDR
+		tax ; ldx 0
+		ldy #$10
+	@ClearName:
+		sta PPUDATA
+			.assert .lobyte(PPU_NAME) = 0, error
+		dex
+		bne @ClearName
+		dey
+		bne @ClearName
+	; lastly, enable screen and NMIs
+	lda #CTRLF_NMI
+	sta PPUCTRL
+	lda #MASKF_BG_ON
+	sta PPUMASK
+	; done
+	cli ; re-enable interrupts
+	jmp Start

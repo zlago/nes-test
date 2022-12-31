@@ -87,23 +87,25 @@ OAMDATA = $2004
 	OAM_SIZE = 4 ; this name could change at any time
 
 ; scroll reg
-PPUSCROLL = $2005
+PPUSCROLL = $2005 ; X first
 
 ; VRAM access regs
-PPUADDR = $2006
+PPUADDR = $2006 ; MSB first
 PPUDATA = $2007
 	; PPU memory map
-	PPU_CHR0  = $0000 ; character table 0
-	PPU_CHR1  = $1000 ; character table 1
-	PPU_NAME0 = $2000 ; nametable 0
-	PPU_NAME1 = $2400 ; nametable 1
-	PPU_NAME2 = $2800 ; nametable 2
-	PPU_NAME3 = $2c00 ; nametable 3
-	PPU_ATTR0 = $23c0 ; attribute table 0
-	PPU_ATTR1 = $27c0 ; attribute table 1
-	PPU_ATTR2 = $2bc0 ; attribute table 2
-	PPU_ATTR3 = $2fc0 ; attribute table 3
-	PPU_PAL   = $3f00 ; palette RAM
+	PPU_CHR  = $0000 ; character tables
+		PPU_CHR0  = $0000 ; character table 0
+		PPU_CHR1  = $1000 ; character table 1
+	PPU_NAME = $2000 ; nametables
+		PPU_NAME0 = $2000 ; nametable 0
+		PPU_NAME1 = $2400 ; nametable 1
+		PPU_NAME2 = $2800 ; nametable 2
+		PPU_NAME3 = $2c00 ; nametable 3
+		PPU_ATTR0 = $23c0 ; attribute table 0
+		PPU_ATTR1 = $27c0 ; attribute table 1
+		PPU_ATTR2 = $2bc0 ; attribute table 2
+		PPU_ATTR3 = $2fc0 ; attribute table 3
+	PPU_PAL  = $3f00 ; palette RAM
 		PPU_PAL_BG  = $3f00 ; BG palettes, 3f00 is the universal bg color
 			PPU_PAL_BG_0 = $3f00 ; BG palette 0
 			PPU_PAL_BG_1 = $3f04 ; BG palette 1
