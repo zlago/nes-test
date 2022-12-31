@@ -1,4 +1,5 @@
 .include "nes.i" ; hardware definitions
+.include "defines.i"
 
 .segment "CODE"
 ; interrupt
@@ -10,14 +11,30 @@ IRQ:
 		pha ; x
 		tya
 		pha ; y
-	; check if this is a BRK (crash)
-		tsx ; load s into x
-		lda $104,x ; then read the 4th pushed value (flags)
-		and #FLAGF_B
-		bne Crash ; if B is set, this is a BRK - crash occured!
-	; run IRQ stuff
+	; check for BRK
+		tsx
+		lda $100+4,x ; fetch the processor flags from the stack
+		and #FLAGF_B ; check if this is a BRK
+		bne Crash ; if so, crash
+	; acknowledge the interrupt source
+		bit SND_CHN ; make sure this is a DMC IRQ
+		bpl Crash ; if its not, crash
+			.assert BIT_N = CHNF_DMC_IRQ, error
 		lda #CHNF_SQ1 | CHNF_SQ2 | CHNF_TRI | CHNF_NOISE
-		sta SND_CHN
+		sta SND_CHN ; if it is, acknowledge and carry on
+	@Wait: ; wait for sprite 0 hit
+		bit PPUSTATUS
+		bvc @Wait
+			.assert BIT_V = STATUSF_SPRITE0, error
+	; display the statusbar (UNTESTED)
+		lda #CTRLF_Y<<2 ; nametable << 2
+		ldx #STATUSBAR_Y ; Y
+		ldy #00 ; X and coarse YX
+			.assert <((STATUSBAR_Y & $F8) << 2) = 0, error
+		sta PPUADDR ; nametable
+		stx PPUSCROLL ; Y
+		sty PPUSCROLL ; X
+		sty PPUADDR ; coarse
 	; restore registers
 		pla ; y
 		tay
@@ -28,4 +45,4 @@ IRQ:
 	rti
 
 Crash:
-	jmp Crash
+	jmp (VECTOR_RESET)

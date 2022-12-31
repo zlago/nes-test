@@ -24,7 +24,7 @@ PollPads: ; read joypads i guess
 @Loop: ; actual polling happens here
 	; poll JOY1
 	lda JOY1 ; shift in a bit
-	lsr a     ;        D0 -> Cy
+	lsr a     ;  D1 -> D0 -> Cy
 	rol zPad1 ; bit7..bit0 <- Cy
 	lsr a     ;        D1 -> Cy
 	rol zPad3 ; bit7..bit0 <- Cy

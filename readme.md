@@ -6,6 +6,16 @@ heck if i know hopefully a game by the end
 
 uhh [ca65 and ld65](https://github.com/cc65/cc65), everything else should be in the repo?
 
+### source
+
+the source code is not your typical NES asm
+
+i put\* extra effort into making this insanely sane (\*i think..)
+
+which may turn out to not be very readable to the average 2a03 enjoyer
+
+also the code may be a little too safe to be reusable (see: irq.65)
+
 ### credits
 
 i stole the [nrom cfg](https://github.com/pinobatch/nrom-template/blob/master/nrom128.cfg)

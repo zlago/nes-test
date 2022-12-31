@@ -9,19 +9,19 @@ zNMI: .res 1 ; incremented each frame
 NMI:
 .export NMI
 	; save registers
-		pha ; push a
+		pha ; a
 		txa
-		pha ; push x
+		pha ; x
 		tya
-		pha ; push y
+		pha ; y
 	; run NMI stuff
 		bit PPUSTATUS ; reset vblank flag
 		inc zNMI ; increment nmi flag
 	; restore registers
-		pla ; pull y
+		pla ; y
 		tay
-		pla ; pull x
+		pla ; x
 		tax
-		pla ; pull a
+		pla ; a
 	; done, return
 	rti
