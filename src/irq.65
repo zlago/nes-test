@@ -5,18 +5,27 @@
 IRQ:
 .export IRQ
 	; save registers
-		pha ; push a
+		pha ; a
 		txa
-		pha ; push x
+		pha ; x
 		tya
-		pha ; push y
+		pha ; y
+	; check if this is a BRK (crash)
+		tsx ; load s into x
+		lda $104,x ; then read the 4th pushed value (flags)
+		and #FLAGF_B
+		bne Crash ; if B is set, this is a BRK - crash occured!
 	; run IRQ stuff
-		nop
+		lda #CHNF_SQ1 | CHNF_SQ2 | CHNF_TRI | CHNF_NOISE
+		sta SND_CHN
 	; restore registers
-		pla ; pull y
+		pla ; y
 		tay
-		pla ; pull x
+		pla ; x
 		tax
-		pla ; pull a
+		pla ; a
 	; done, return
 	rti
+
+Crash:
+	jmp Crash
