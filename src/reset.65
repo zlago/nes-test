@@ -47,14 +47,13 @@ Reset:
 		stx PPUMASK ; enable blanking
 		stx PPUCTRL ; enable +1 PPUADDR increment
 	; clear the nametables
-		; select address
 		lda PPUSTATUS ; reset latch
-		lda #.hibyte(PPU_NAME)
+		lda #.hibyte(PPU_NAME1)
 		sta PPUADDR
-		lda #.lobyte(PPU_NAME)
+		lda #.lobyte(PPU_NAME1)
 		sta PPUADDR
 		tax ; ldx 0
-		ldy #$10
+		ldy #.hibyte(PPU_NAME3 - PPU_NAME1)
 	@ClearName:
 		sta PPUDATA
 			.assert .lobyte(PPU_NAME) = 0, error
@@ -62,6 +61,18 @@ Reset:
 		bne @ClearName
 		dey
 		bne @ClearName
+	; init palette
+		lda #.hibyte(PPU_PAL)
+		sta PPUADDR
+		lda #.lobyte(PPU_PAL)
+		sta PPUADDR
+		ldy #32 ; y will be the counter
+	@InitPal: ; x should be 0 on entry
+		lda Palette,x
+		sta PPUDATA
+		inx
+		dey
+		bne @InitPal
 	; lastly, enable screen and NMIs
 	lda #CTRLF_NMI
 	sta PPUCTRL
@@ -70,3 +81,8 @@ Reset:
 	; done
 	cli ; re-enable interrupts
 	jmp Start
+
+.segment "RODATA"
+Palette:
+.incbin "res/bg.pal"
+.incbin "res/spr.pal"
