@@ -61,23 +61,28 @@ Reset:
 		bne @ClearName
 		dey
 		bne @ClearName
-	; init palette
+	; now, palette
 		lda #.hibyte(PPU_PAL)
 		sta PPUADDR
 		lda #.lobyte(PPU_PAL)
 		sta PPUADDR
 		ldy #32 ; y will be the counter
-	@InitPal: ; x should be 0 on entry
+	@Wait3: ; which has to be done in vblank
+		bit PPUSTATUS
+		bpl @Wait3
+			.assert BIT_N = STATUSF_VBLANK, error
+		; x should be 0 for the following code
+	@InitPal:
 		lda Palette,x
 		sta PPUDATA
 		inx
 		dey
 		bne @InitPal
-	; lastly, enable screen and NMIs
-	lda #CTRLF_NMI
-	sta PPUCTRL
-	lda #MASKF_BG_ON
-	sta PPUMASK
+	; and finally, enable NMIs and rendering
+		lda #CTRLF_NMI
+		sta PPUCTRL
+		lda #MASKF_BG_ON
+		sta PPUMASK
 	; done
 	cli ; re-enable interrupts
 	jmp Start

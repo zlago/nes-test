@@ -22,7 +22,7 @@ zColor: .res 1
 ; define the interrpt/reset vectors
 .word NMI ; NMI vector
 .word Reset ; reset vector
-.word IRQ ; IRQ vector
+.word IRQ ; IRQ/BRK vector
 
 .segment "CODE"
 ; execution starts here
