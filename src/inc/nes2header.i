@@ -8,6 +8,11 @@
 ; code copies.  This file is offered as-is, without any warranty.
 ;
 
+;
+; uhhh i (zlago) added a macro for the default expansion device
+; i have no idea how to properly document this change, PRs welcome
+;
+
 ;;
 ; Puts ceil(log2(sz / 64)) in logsz, which should be
 ; local to the calling macro.  Used for NES 2 RAM sizes.
@@ -167,6 +172,13 @@ _nes2_chrsizehi = >sz1
 .endmacro
 
 ;;
+; sets the default expansion device, cheat sheet:
+; https://www.nesdev.org/wiki/NES_2.0#Default_Expansion_Device
+.macro nes2expansion expansiondevice
+  _nes2_expansiondevice = expansiondevice
+.endmacro
+
+;;
 ; Writes the header configured by previous nes2 macros.
 .macro nes2end
 .local battery_bit
@@ -201,6 +213,9 @@ _nes2_chrsizehi = >sz1
   .else
     battery_bit = $00
   .endif
+  .ifndef _nes2_expansiondevice
+    nes2expansion 0
+  .endif
 
   .pushseg
   .segment "INESHDR"
@@ -214,6 +229,6 @@ _nes2_chrsizehi = >sz1
   .byte (_nes2_bramsize << 4) | _nes2_wramsize
   .byte (_nes2_chrbramsize << 4) | _nes2_chrramsize
 
-  .byte _nes2_tvsystem, 0, 0, 0
+  .byte _nes2_tvsystem, 0, 0, _nes2_expansiondevice
   .popseg
 .endmacro

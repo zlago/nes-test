@@ -14,6 +14,7 @@ IRQ:
 	; check for BRK
 		tsx
 		lda $100+4,x ; fetch the processor flags from the stack
+			; relies on irq handler pushing all 3 registers
 		and #FLAGF_B ; check if this is a BRK
 		bne Crash ; if so, crash
 	; acknowledge the interrupt source

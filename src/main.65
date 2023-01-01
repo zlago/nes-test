@@ -13,6 +13,7 @@ nes2prg 16384 ; 16K PRG
 nes2chr 8192 ; 8K CHR
 nes2mirror 'H' ; horizontal mirroring
 nes2tv 'N' ; NTSC only
+nes2expansion 3 ; 4 player adapter (FC)
 nes2end
 
 .segment "ZEROPAGE"
