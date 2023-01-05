@@ -3,6 +3,21 @@
 ; its own file i throw it here
 ; sometimes i forget to do that though
 
+          ;''''''''''''''''''''''''''''''''''''''''''''''''';
+         ; /""|   /"""/ cuz i couldnt bother writting code ;
+        ; /   |  /   /"|/""/-""".  /""/""/""              ;
+       ; /    | /   /     /  ..  |/        /             ;
+      ; /     |/   /  -""'|  ''  /  /  /  /             ;
+     ; /   .  '   /../     "-...-,,/,,/,,/             ;
+    ; /   /|     /     ,^"""//"""\/"""\               ;
+   ; /   / |    / ,,,,'-,  //,,^ ,\ ' /              ;
+  ; /   /  |   / /   / /  / ,' _'/ . \              ;
+ ; /,,,/   ;../  """" /,,//,,,,,/\,,,/             ;
+;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,;
+
+; to do list :
+	; [ ] write a to do list
+
 .include "nes.i" ; hardware definitions
 .include "nes2header.i" ; header definition macros
 .include "main.imp" ; import used labels
