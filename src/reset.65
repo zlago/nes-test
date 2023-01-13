@@ -14,9 +14,10 @@ Reset:
 	; disable things
 	ldx #FRAMEF_IRQ
 	stx APU_FRAME ; SUSpend frame counter IRQ ඞ
-	ldx #$ff
-	txs ; nuke stack pointer (s = $1ff)
-	inx ; now x = $00
+	ldx #.lobyte(StackEnd - 1)
+	txs ; nuke stack pointer
+	inx
+		.assert .lobyte(StackEnd) = 0, error
 	stx PPUCTRL ; disable NMIs
 	stx PPUMASK ; disable rendering
 	stx DMC_FREQ ; disable DMC IRQ
@@ -86,6 +87,13 @@ Reset:
 	; done
 	cli ; re-enable interrupts
 	jmp Start
+
+.segment "STACK"
+Stack: .res 32
+StackEnd:
+
+.segment "SHADOWOAM"
+SOAM: .res 256
 
 .segment "RODATA"
 Palette:
