@@ -75,7 +75,7 @@ Color: ; do funny math on palette
 	; read buttons
 	jsr PollPads
 	; read, idk
-	lda zPad1
+	lda zPads+1
 	; select address
 	lda PPUSTATUS ; reset latch
 	lda #.hibyte(PPU_PAL)

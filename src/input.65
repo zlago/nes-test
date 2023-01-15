@@ -3,40 +3,64 @@
 .include "nes.i"
 
 .segment "ZEROPAGE"
-.exportzp zPads, zPad1, zPad2, zPad3, zPad4
-zPads: ; for zp,x addressing
-zPad1: .res 1 ; controller 1
-zPad2: .res 1 ; controller 2
-zPad3: .res 1 ; controller 3
-zPad4: .res 1 ; controller 4
+.exportzp zPads := zInput - 1, zPadsDiff := zInputDiff - 1
+zInput:     .res 8 ; 8 controllers
+zInputDiff: .res 8 ; and input diff
 
 .segment "CODE"
 PollPads: ; read joypads i guess
 .export PollPads
 ; based on NESdev polling example code
 ; which uses the pad state as a shift register
-	; first prepare for polling
-	lda #01
+; polling is done in two.. rounds, i guess?
+; pads 1-4 then 5-8, i could poll once but
+; this way it supports more adapters
+	; move zPads into zPadsDiff
+	ldx #08
+@Loop:
+	lda zPads,x
+	sta zPadsDiff,x
+	dex
+	bne @Loop
+	; prepare for polling
+	lda #01 ; comment goes here
+	ldy #02 ; counter sorta
+	; x should be 0 here
 	sta JOY1 ; strobe pads
-	sta zPad4 ; see comment on bcc
+Poll4:
+	sta zPads+4,x ; set lsb of shift
 	lsr ; A = 0
 	sta JOY1 ; unstrobe
-@Loop: ; actual polling happens here
+@Loop: ; poll a bit
 	; poll JOY1
-	lda JOY1 ; shift in a bit
-	lsr a     ;  D1 -> D0 -> Cy
-	rol zPad1 ; bit7..bit0 <- Cy
-	lsr a     ;        D1 -> Cy
-	rol zPad3 ; bit7..bit0 <- Cy
+	lda JOY1 ; shift in two JOY1 bits
+	lsr a         ;   D1 -> D0 -> Cy
+	rol zPads+1,x ; bit7..bit0 <- Cy
+	lsr a         ;         D1 -> Cy
+	rol zPads+3,x ; bit7..bit0 <- Cy
 	; repeat for JOY2
-	lda JOY2
-	lsr a
-	rol zPad2
-	lsr a
-	rol zPad4
+	lda JOY2 ; shift in two JOY2 bits
+	lsr a         ;   D1 -> D0 -> Cy
+	rol zPads+2,x ; bit7..bit0 <- Cy
+	lsr a         ;         D1 -> Cy
+	rol zPads+4,x ; bit7..bit0 <- Cy
 	; since we set bit0, once it gets
-	; shifted into carry, it means were
-	; done polling
+	; shifted into carry, it means we
+	; have polled 4 bytes
 	bcc @Loop
-	; done!
+	dey
+	beq Diff ; after 2 rounds move onto diffing
+	; prepare to poll once more
+	tya ; y should be 1
+	ldx #4 ; resets N
+	bpl Poll4
+Diff: ; set zPadsDiff to the EOR of zPads and old zPads
+	ldx #8
+@Loop:
+	lda zPads,x
+	eor zPadsDiff,x
+	sta zPadsDiff,x
+	dex
+	bne @Loop
+	; and done!
 	rts
