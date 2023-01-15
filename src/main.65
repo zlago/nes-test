@@ -16,7 +16,20 @@
 ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,;
 
 ; to do list :
-	; [ ] write a to do list
+	; [ ] NMI
+		; [ ] handle DMA
+		; [ ] handle VRAM updates
+		; [ ] lagproof scrolling
+		; [ ] properly handle IRQ
+	; [ ] game
+		; [ ] gameplay
+			; [ ] actually have actors
+			; [ ] allow for controlling actors
+			; [ ] some collision
+			; [ ] put actors in shadow OAM
+		; [ ] loading
+			; load levels
+	; [ ] write more todo
 
 .include "nes.i" ; hardware definitions
 .include "nes2header.i" ; header definition macros
