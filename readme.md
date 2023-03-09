@@ -4,7 +4,12 @@ heck if i know hopefully a game by the end
 
 ### compiling
 
-uhh [ca65 and ld65](https://github.com/cc65/cc65), everything else should be in the repo?
+dependencies:
+- GNU make (v4.3, todo: link)
+- [ca65 and ld65](https://github.com/cc65/cc65)
+
+building:
+1. run `make`
 
 ### source
 
