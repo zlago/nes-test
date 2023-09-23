@@ -14,9 +14,9 @@ CFG_FILE = nrom128.cfg
 BIN_NAME = test
 
 # dependencies
-ASM_REQS = $(shell find src/inc/ -name '*.i') $(shell find src/inc/ -name '*.imp')
+ASM_REQS = $(wildcard src/inc/*.i) $(wildcard src/inc/*.imp)
 	# i wonder if i could set this one to only trip for a .65 that shares the .imp's name
-LINK_REQS = $(patsubst src/%.65,obj/%.o,$(shell find src/ -name '*.65'))
+LINK_REQS = $(patsubst src/%.65,obj/%.o,$(wildcard src/*.65))
 GFX_REQS = 
 
 .PHONY: all clean
@@ -24,17 +24,20 @@ GFX_REQS =
 all: bin/${BIN_NAME}.nes
 
 clean:
-	rm -rf bin/
-	rm -rf obj/
+	rm -rf bin/ obj/
 
-bin/:
-	mkdir bin/
-
-obj/:
-	mkdir obj/
-
-obj/%.o: src/%.65 $(ASM_REQS) $(GFX_REQS) obj/ 
+obj/%.o: src/%.65 obj/%.d #$(ASM_REQS) $(GFX_REQS)
+	@mkdir -p obj/
 	ca65 ${ASM_FLAGS} -o $@ $<
 
-bin/${BIN_NAME}.nes: $(LINK_REQS) bin/
+obj/%.d: src/%.65
+	@mkdir -p obj/
+	@ca65 ${ASM_FLAGS} --create-full-dep $@ -o $@.tmp $<
+	@sed 's;$@.tmp;$(patsubst %.d,%.o,$@);' -i $@
+	@rm -f $@.tmp
+
+bin/${BIN_NAME}.nes: $(LINK_REQS)
+	@mkdir -p bin/
 	ld65 ${LINK_FLAGS} -o $@ obj/*.o
+
+include $(patsubst src/%.65,obj/%.d,$(wildcard src/*.65))

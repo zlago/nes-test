@@ -1,10 +1,8 @@
-*.nes
-*.dbg
-*.txt
-*.o
+/bin/
+/obj/
 *.lnk
 *.nss
 *.sublime-*
-concept/
+/concept/
 /res/
 # couldnt figure out how to convert pngs so im editing the raw chr with NEXXT instead
