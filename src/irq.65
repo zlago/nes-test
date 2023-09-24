@@ -1,5 +1,5 @@
-.include "nes.i" ; hardware definitions
-.include "defines.i"
+.include "src/inc/nes.i" ; hardware definitions
+.include "src/inc/defines.i"
 
 .segment "CODE"
 ; interrupt

@@ -31,9 +31,9 @@
 			; load levels
 	; [ ] write more todo
 
-.include "nes.i" ; hardware definitions
-.include "nes2header.i" ; header definition macros
-.include "main.imp" ; import used labels
+.include "src/inc/nes.i" ; hardware definitions
+.include "src/inc/nes2header.i" ; header definition macros
+.include "src/imp/main.imp" ; import used labels
 
 ; define the header
 nes2mapper 0 ; NROM
@@ -95,4 +95,4 @@ Color: ; do funny math on palette
 	jmp Spin
 
 .segment "CHR"
-.incbin "res/patterns.chr" ; CHR ROM
+.incbin "src/res/patterns.chr" ; CHR ROM

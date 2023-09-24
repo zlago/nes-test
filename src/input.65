@@ -1,6 +1,6 @@
 ; read joypads when called or something
 
-.include "nes.i"
+.include "src/inc/nes.i"
 
 .segment "ZEROPAGE"
 .exportzp zPads := zInput - 1, zPadsDiff := zInputDiff - 1

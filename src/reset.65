@@ -1,5 +1,5 @@
-.include "nes.i" ; hardware definitions
-.include "reset.imp" ; import used labels
+.include "src/inc/nes.i" ; hardware definitions
+.include "src/imp/reset.imp" ; import used labels
 
 .segment "CODE"
 ; system reset
@@ -97,5 +97,5 @@ SOAM: .res 256
 
 .segment "RODATA"
 Palette:
-.incbin "res/bg.pal"
-.incbin "res/spr.pal"
+.incbin "src/res/bg.pal"
+.incbin "src/res/spr.pal"
